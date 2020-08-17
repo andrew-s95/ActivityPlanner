@@ -1,0 +1,40 @@
+@model Funtime
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Activity Info</title>
+</head>
+<body>
+    <h1>Dojo Activity Center</h1>
+    <h2>@Model.Title </h2> 
+    <a href="dashboard" class="btn btn-primary">Home</a> <a href="/logout" class="btn btn-primary">Log Out</a><br>
+    <h3>Event Coordinator:</h3><br>
+    <h3>Description: </h3>
+    <p>@Model.Description</p><br>
+    <h3>Participants:</h3>
+    <ul>
+        @foreach (var participant in @Model.Associations)
+        {
+            <li>@participant.Participant.FirstName @participant.Participant.LastName</li>
+        }
+    </ul>
+    @foreach(Funtime activity in @ViewBag.activities)
+    {
+        @if(activity.UserId == ViewBag.user)
+        {
+            <a asp-action="Delete" asp-controller="Home" asp-route-activityId="@activity.FuntimeId">Delete</a>
+        }
+        else if(activity.Associations.Any(user => user.UserId == ViewBag.user))
+        {
+            <a asp-action="Leave" asp-controller="Home" asp-route-activityId="@activity.FuntimeId">Leave</a>
+        }
+        else
+        {
+            <a asp-action="Join" asp-controller="Home" asp-route-activityId="@activity.FuntimeId">Join</a>
+        }
+    }
+</body>
+</html>
